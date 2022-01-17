@@ -1,6 +1,10 @@
 import 'package:intl/intl.dart';
 
 String statement(invoice, plays) {
+  return renderPlainText(invoice, plays);
+}
+
+renderPlainText(invoice, plays) {
   String result = '\nStatement for ${invoice['customers'].toString()}\n';
 
   usd(aNumber) {
