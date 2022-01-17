@@ -26,21 +26,24 @@ String statement(invoice, plays) {
   String result = '\nStatement for ${invoice['customers'].toString()}\n';
   NumberFormat format = NumberFormat.simpleCurrency();
 
-  for (final perf in invoice['performances']) {
-    Map<String, dynamic> play = plays[perf['playID']];
+  playFor(aPerfomance) {
+    return plays[aPerfomance['playID']];
+  }
 
-    int thisAmount = amountFor(perf, play);
+  for (final perf in invoice['performances']) {
+    //final play = playFor(perf);
+    final int thisAmount = amountFor(perf, playFor(perf));
 
     // add volume credits
     volumeCredits += perf['audience'] - 30 as int;
 
-    if (play['type'] == 'comedy') {
+    if (playFor(perf)['type'] == 'comedy') {
       volumeCredits += (perf['audience'] / 5).floor() as int;
     }
 
     // print line for this order
     result +=
-        '  ${play['name']}: ${format.format(thisAmount / 100)} (${perf['audience']} seats)\n';
+        '  ${playFor(perf)['name']}: ${format.format(thisAmount / 100)} (${perf['audience']} seats)\n';
     totalAmount += thisAmount;
   }
 
@@ -49,22 +52,22 @@ String statement(invoice, plays) {
   return result;
 }
 
-int amountFor(perf, play) {
+int amountFor(aPerformance, play) {
   int result = 0;
 
   switch (play['type']) {
     case 'tragedy':
       result = 40000;
-      if (perf['audience'] > 30) {
-        result += 1000 * (perf['audience'] - 30) as int;
+      if (aPerformance['audience'] > 30) {
+        result += 1000 * (aPerformance['audience'] - 30) as int;
       }
       break;
     case 'comedy':
       result = 30000;
-      if (perf['audience']! > 20) {
-        result += 10000 + 500 * (perf['audience'] - 20) as int;
+      if (aPerformance['audience']! > 20) {
+        result += 10000 + 500 * (aPerformance['audience'] - 20) as int;
       }
-      result += 300 * perf['audience'] as int;
+      result += 300 * aPerformance['audience'] as int;
       break;
     default:
       throw 'unknown type: ${play['type']}';
