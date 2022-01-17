@@ -1,8 +1,6 @@
 import 'package:intl/intl.dart';
 
 String statement(invoice, plays) {
-  int totalAmount = 0;
-
   String result = '\nStatement for ${invoice['customers'].toString()}\n';
 
   usd(aNumber) => NumberFormat.simpleCurrency().format(aNumber / 100);
@@ -44,7 +42,14 @@ String statement(invoice, plays) {
   for (final perf in invoice['performances']) {
     result +=
         '  ${playFor(perf)['name']}: ${usd(amountFor(perf))} (${perf['audience']} seats)\n';
-    totalAmount += amountFor(perf);
+  }
+
+  appleSauce() {
+    int totalAmount = 0;
+    for (final perf in invoice['performances']) {
+      totalAmount += amountFor(perf);
+    }
+    return totalAmount;
   }
 
   totalVolumeCredits() {
@@ -55,7 +60,7 @@ String statement(invoice, plays) {
     return volumeCredits;
   }
 
-  result += 'Amount owed is ${usd(totalAmount)}\n';
+  result += 'Amount owed is ${usd(appleSauce())}\n';
   result += 'You earned ${totalVolumeCredits()} credits\n';
   return result;
 }
