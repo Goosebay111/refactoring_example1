@@ -6,6 +6,7 @@ String statement(invoice, plays) {
   statementData['performances'] = invoice['performances'].map((aPerformance) {
     var result = {};
     result.addAll(aPerformance);
+    result['play'] = plays[aPerformance['playID']];
     return result;
   }).toList();
 
