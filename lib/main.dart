@@ -44,12 +44,12 @@ String statement(invoice, plays) {
         '  ${playFor(perf)['name']}: ${usd(amountFor(perf))} (${perf['audience']} seats)\n';
   }
 
-  appleSauce() {
-    int totalAmount = 0;
+  totalAmount() {
+    int _result = 0;
     for (final perf in invoice['performances']) {
-      totalAmount += amountFor(perf);
+      _result += amountFor(perf);
     }
-    return totalAmount;
+    return _result;
   }
 
   totalVolumeCredits() {
@@ -60,7 +60,7 @@ String statement(invoice, plays) {
     return volumeCredits;
   }
 
-  result += 'Amount owed is ${usd(appleSauce())}\n';
+  result += 'Amount owed is ${usd(totalAmount())}\n';
   result += 'You earned ${totalVolumeCredits()} credits\n';
   return result;
 }
