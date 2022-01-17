@@ -5,42 +5,47 @@ String statement(invoice, plays) {
   int volumeCredits = 0;
 
   String result = '\nStatement for ${invoice['customers'].toString()}\n';
-  final NumberFormat format = NumberFormat.simpleCurrency();
 
   Map<String, dynamic> playFor(aPerfomance) {
     return plays[aPerfomance['playID']];
   }
 
+  NumberFormat format(aNumber) {
+    var _format = NumberFormat.simpleCurrency();
+    _format.format(aNumber);
+    return _format;
+  }
+
   int amountFor(aPerformance) {
-    int result = 0;
+    int _result = 0;
 
     switch (playFor(aPerformance)['type']) {
       case 'tragedy':
-        result = 40000;
+        _result = 40000;
         if (aPerformance['audience'] > 30) {
-          result += 1000 * (aPerformance['audience'] - 30) as int;
+          _result += 1000 * (aPerformance['audience'] - 30) as int;
         }
         break;
       case 'comedy':
-        result = 30000;
+        _result = 30000;
         if (aPerformance['audience']! > 20) {
-          result += 10000 + 500 * (aPerformance['audience'] - 20) as int;
+          _result += 10000 + 500 * (aPerformance['audience'] - 20) as int;
         }
-        result += 300 * aPerformance['audience'] as int;
+        _result += 300 * aPerformance['audience'] as int;
         break;
       default:
         throw 'unknown type: ${playFor(aPerformance)['type']}';
     }
-    return result;
+    return _result;
   }
 
-  volumeCreditsFor(perf) {
-    int volumeCredits = 0;
-    volumeCredits += perf['audience'] - 30 as int;
-    if (playFor(perf)['type'] == 'comedy') {
-      volumeCredits += (perf['audience'] / 5).floor() as int;
+  volumeCreditsFor(aPerformance) {
+    int _result = 0;
+    _result += aPerformance['audience'] - 30 as int;
+    if (playFor(aPerformance)['type'] == 'comedy') {
+      _result += (aPerformance['audience'] / 5).floor() as int;
     }
-    return volumeCredits;
+    return _result;
   }
 
   for (final perf in invoice['performances']) {
@@ -48,11 +53,11 @@ String statement(invoice, plays) {
 
     // print line for this order
     result +=
-        '  ${playFor(perf)['name']}: ${format.format(amountFor(perf) / 100)} (${perf['audience']} seats)\n';
+        '  ${playFor(perf)['name']}: ${format(amountFor(perf) / 100)} (${perf['audience']} seats)\n';
     totalAmount += amountFor(perf);
   }
 
-  result += 'Amount owed is ${format.format(totalAmount / 100)}\n';
+  result += 'Amount owed is ${format(totalAmount / 100)}\n';
   result += 'You earned $volumeCredits credits\n';
   return result;
 }
