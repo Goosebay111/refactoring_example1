@@ -2,11 +2,14 @@ import 'package:intl/intl.dart';
 
 String statement(invoice, plays) {
   final statementData = {};
-  return renderPlainText(statementData, invoice, plays);
+  statementData['customer'] = invoice['customer'];
+  statementData['performances'] = invoice['performances'];
+
+  return renderPlainText(statementData, plays);
 }
 
-renderPlainText(data, invoice, plays) {
-  String result = '\nStatement for ${invoice['customers'].toString()}\n';
+renderPlainText(data, plays) {
+  String result = '\nStatement for ${data['customers'].toString()}\n';
 
   usd(aNumber) {
     return NumberFormat.simpleCurrency().format(aNumber / 100);
@@ -49,7 +52,7 @@ renderPlainText(data, invoice, plays) {
 
   totalAmount() {
     int _result = 0;
-    for (final perf in invoice['performances']) {
+    for (final perf in data['performances']) {
       _result += amountFor(perf);
     }
     return _result;
@@ -57,13 +60,13 @@ renderPlainText(data, invoice, plays) {
 
   totalVolumeCredits() {
     int volumeCredits = 0;
-    for (final perf in invoice['performances']) {
+    for (final perf in data['performances']) {
       volumeCredits += volumeCreditsFor(perf);
     }
     return volumeCredits;
   }
 
-  for (final perf in invoice['performances']) {
+  for (final perf in data['performances']) {
     result +=
         '  ${playFor(perf)['name']}: ${usd(amountFor(perf))} (${perf['audience']} seats)\n';
   }
