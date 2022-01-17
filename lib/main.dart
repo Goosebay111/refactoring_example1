@@ -34,26 +34,26 @@ String statement(invoice, plays) {
     return result;
   }
 
-  for (final perf in invoice['performances']) {
-    int thisAmount = amountFor(perf);
-
-    // add volume credits
+  volumeCreditsFor(perf) {
+    int volumeCredits = 0;
     volumeCredits += perf['audience'] - 30 as int;
-
-    // var play = playFor(perf);
-
     if (playFor(perf)['type'] == 'comedy') {
       volumeCredits += (perf['audience'] / 5).floor() as int;
     }
+    return volumeCredits;
+  }
+
+  for (final perf in invoice['performances']) {
+    volumeCredits += volumeCreditsFor(perf);
 
     // print line for this order
     result +=
-        '  ${playFor(perf)['name']}: ${format.format(thisAmount / 100)} (${perf['audience']} seats)\n';
-    totalAmount += thisAmount;
+        '  ${playFor(perf)['name']}: ${format.format(amountFor(perf) / 100)} (${perf['audience']} seats)\n';
+    totalAmount += amountFor(perf);
   }
 
   result += 'Amount owed is ${format.format(totalAmount / 100)}\n';
-  result += 'You earned ${volumeCredits} credits\n';
+  result += 'You earned $volumeCredits credits\n';
   return result;
 }
 
