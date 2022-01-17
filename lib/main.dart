@@ -50,24 +50,24 @@ String statement(invoice, plays) {
 }
 
 int amountFor(perf, play) {
-  int thisAmount = 0;
+  int result = 0;
 
   switch (play['type']) {
     case 'tragedy':
-      thisAmount = 40000;
+      result = 40000;
       if (perf['audience'] > 30) {
-        thisAmount += 1000 * (perf['audience'] - 30) as int;
+        result += 1000 * (perf['audience'] - 30) as int;
       }
       break;
     case 'comedy':
-      thisAmount = 30000;
+      result = 30000;
       if (perf['audience']! > 20) {
-        thisAmount += 10000 + 500 * (perf['audience'] - 20) as int;
+        result += 10000 + 500 * (perf['audience'] - 20) as int;
       }
-      thisAmount += 300 * perf['audience'] as int;
+      result += 300 * perf['audience'] as int;
       break;
     default:
       throw 'unknown type: ${play['type']}';
   }
-  return thisAmount;
+  return result;
 }
