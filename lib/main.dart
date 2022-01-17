@@ -3,7 +3,11 @@ import 'package:intl/intl.dart';
 String statement(invoice, plays) {
   final statementData = {};
   statementData['customer'] = invoice['customer'];
-  statementData['performances'] = invoice['performances'];
+  statementData['performances'] = invoice['performances'].map((aPerformance) {
+    var result = {};
+    result.addAll(aPerformance);
+    return result;
+  }).toList();
 
   return renderPlainText(statementData, plays);
 }
