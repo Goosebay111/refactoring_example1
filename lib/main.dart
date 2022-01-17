@@ -6,15 +6,9 @@ String statement(invoice, plays) {
 
   String result = '\nStatement for ${invoice['customers'].toString()}\n';
 
-  Map<String, dynamic> playFor(aPerfomance) {
-    return plays[aPerfomance['playID']];
-  }
+  usd(aNumber) => NumberFormat.simpleCurrency().format(aNumber / 100);
 
-  NumberFormat format(aNumber) {
-    var _format = NumberFormat.simpleCurrency();
-    _format.format(aNumber);
-    return _format;
-  }
+  Map<String, dynamic> playFor(aPerfomance) => plays[aPerfomance['playID']];
 
   int amountFor(aPerformance) {
     int _result = 0;
@@ -53,11 +47,11 @@ String statement(invoice, plays) {
 
     // print line for this order
     result +=
-        '  ${playFor(perf)['name']}: ${format(amountFor(perf) / 100)} (${perf['audience']} seats)\n';
+        '  ${playFor(perf)['name']}: ${usd(amountFor(perf))} (${perf['audience']} seats)\n';
     totalAmount += amountFor(perf);
   }
 
-  result += 'Amount owed is ${format(totalAmount / 100)}\n';
+  result += 'Amount owed is ${usd(totalAmount)}\n';
   result += 'You earned $volumeCredits credits\n';
   return result;
 }
