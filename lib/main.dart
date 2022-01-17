@@ -3,13 +3,16 @@ import 'package:intl/intl.dart';
 String statement(invoice, plays) {
   String result = '\nStatement for ${invoice['customers'].toString()}\n';
 
-  usd(aNumber) => NumberFormat.simpleCurrency().format(aNumber / 100);
+  usd(aNumber) {
+    return NumberFormat.simpleCurrency().format(aNumber / 100);
+  }
 
-  Map<String, dynamic> playFor(aPerfomance) => plays[aPerfomance['playID']];
+  Map<String, dynamic> playFor(aPerfomance) {
+    return plays[aPerfomance['playID']];
+  }
 
   int amountFor(aPerformance) {
     int _result = 0;
-
     switch (playFor(aPerformance)['type']) {
       case 'tragedy':
         _result = 40000;
@@ -39,11 +42,6 @@ String statement(invoice, plays) {
     return _result;
   }
 
-  for (final perf in invoice['performances']) {
-    result +=
-        '  ${playFor(perf)['name']}: ${usd(amountFor(perf))} (${perf['audience']} seats)\n';
-  }
-
   totalAmount() {
     int _result = 0;
     for (final perf in invoice['performances']) {
@@ -58,6 +56,11 @@ String statement(invoice, plays) {
       volumeCredits += volumeCreditsFor(perf);
     }
     return volumeCredits;
+  }
+
+  for (final perf in invoice['performances']) {
+    result +=
+        '  ${playFor(perf)['name']}: ${usd(amountFor(perf))} (${perf['audience']} seats)\n';
   }
 
   result += 'Amount owed is ${usd(totalAmount())}\n';
